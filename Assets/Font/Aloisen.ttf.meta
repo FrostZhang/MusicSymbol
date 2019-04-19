@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 50cc856cf61ea174f9a265cf5e5e38f5
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 41
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Aloisen New
+  fontNames:
+  - Aloisen
+  fallbackFontReferences: []
+  customCharacters: ABCDEFG
+  fontRenderingMode: 1
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
