@@ -50,7 +50,7 @@ public class Instrument_Test : LayoutGroup
                 meacw += cureentCw;
             }
             base.SetChildAlongAxis(base.rectChildren[i], 0, cw, 0);
-            base.SetChildAlongAxis(base.rectChildren[i], 1, i * (childhight + grouphight), 0);
+            base.SetChildAlongAxis(base.rectChildren[i], 1, i * (childhight + grouphight) + padding.top, 0);
         }
     }
 
@@ -59,27 +59,21 @@ public class Instrument_Test : LayoutGroup
 
     }
 
-    public void Change()
-    {
-        Debug.Log(1);
-        this.SetDirty();
-    }
-
     protected override void Awake()
     {
         base.Awake();
         groups = GetComponentsInChildren<Group>().ToList();
     }
 
-    public void OnGroupChange(int groupOrder,int groupChildOrder,float with)
+    public void OnGroupChange(int groupOrder, int groupChildOrder, float with)
     {
         for (int i = 0; i < groups.Count; i++)
         {
-            if (i!=groupOrder)
+            if (i != groupOrder)
             {
                 groups[i].SetChildW(groupChildOrder, with);
             }
         }
-        Change();
+        this.SetDirty();
     }
 }

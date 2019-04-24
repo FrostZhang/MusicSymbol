@@ -14,6 +14,9 @@ public class Measure : UIBehaviour
     private float min;
     Group group;
 
+    public int meterX=4;
+    public int meterY=4;
+
     protected override void Awake()
     {
         base.Awake();
