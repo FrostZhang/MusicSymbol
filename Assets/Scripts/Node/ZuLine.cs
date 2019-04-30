@@ -42,7 +42,7 @@ public class ZuLine : MaskableGraphic
             Debug.Log("连接组数量必须 >=2");
             return;
         }
-        int linnum= CalLineNum(zu.symbols, ref count);
+        int linnum = CalLineNum(zu.symbols, ref count);
     }
 
     private int CalLineNum(List<Symbol> symbols, ref int count)
@@ -66,9 +66,12 @@ public class ZuLine : MaskableGraphic
         int i = (int)f.symbolbaseTime - 2;
         var fpos = f.SymbolHeads[f.SymbolHeads.Count - 1].fuwei.rectTransform.position;
         var epos = e.SymbolHeads[e.SymbolHeads.Count - 1].fuwei.rectTransform.position;
+
         Vector2 _fpos, _epos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, fpos, Cam, out _fpos);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, epos, Cam, out _epos);
+        _fpos = fpos- rectTransform.position ;
+        _epos = epos-rectTransform.position ;
+        //RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, fpos, Cam, out _fpos);
+        //RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, epos, Cam, out _epos);
         Debug.Log("开始连接" + _fpos + " " + _epos);
         //Debug.Log(a+" "+b);
         GetQuad(_fpos, _epos);
