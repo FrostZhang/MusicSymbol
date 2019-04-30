@@ -49,5 +49,5 @@ public class Note : MonoBehaviour
 
 public enum NodeType
 {
-    node1 = 1, node2, node4, node8, node16, node32, _node1 = 1, _node2, _node4, _node8, _node16, _node32
+    None,node1 = 1, node2, node4, node8, node16, node32, _node1 = 1, _node2, _node4, _node8, _node16, _node32
 }

@@ -21,20 +21,19 @@ public class Group : MonoBehaviour
         }
     }
 
-    public void OnMeaChange(int order,float with)
+    public void OnMeaChange(int order, float with)
     {
         instrument.OnGroupChange(tr.GetSiblingIndex(), order, with);
     }
 
-    public void SetChildW(int order,float with)
+    public void SetChildW(int order, float with)
     {
-        var t = tr.GetChild(order);
-        if (t==null)
+        if (tr.childCount <= order)
         {
             Debug.LogError("每行不对称");
             return;
         }
-        var rect= t.GetComponent<RectTransform>();
+        var rect = tr.GetChild(order).GetComponent<RectTransform>();
         rect.sizeDelta = new Vector2(with, rect.sizeDelta.y);
     }
 

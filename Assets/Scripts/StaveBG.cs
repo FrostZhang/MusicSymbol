@@ -18,11 +18,13 @@ public class StaveBG : MaskableGraphic
     {
         vh.Clear();
         var size = GetPixelAdjustedRect().size;
+
         var lenght = size.x;
-        var h = size.y / (lineNum - 1);
+        float outline = rectTransform.anchoredPosition.y;
+        var h = (size.y + outline * 2) / (lineNum - 1);
         for (int i = 0; i < lineNum; i++)
         {
-            vh.AddUIVertexQuad(GetQuad(new Vector2(0, i * h), new Vector2(lenght, i * h)));
+            vh.AddUIVertexQuad(GetQuad(new Vector2(0, i * h - outline), new Vector2(lenght, i * h - outline)));
         }
     }
 
