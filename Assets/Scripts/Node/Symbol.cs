@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class Symbol : LayoutGroup
 {
@@ -13,6 +14,11 @@ public class Symbol : LayoutGroup
     [Header("时值")]
     public SymbolbaseTime symbolbaseTime;
     public float meterTime = 0.5f;
+
+    //归宿于组员
+    public Symbol_ZU symbol_zu { get; set; }
+    //当归属于组的时候  获得其交叉点
+    public Vector2 zupos { get; set; }
 
     private bool symbolTimeZero;
     private SymbolbaseTime _last_symbolTime = SymbolbaseTime.none;
@@ -49,6 +55,8 @@ public class Symbol : LayoutGroup
     }
 
     public new RectTransform rectTransform { get { return base.rectTransform; } }
+
+    public Action OnMove;
 
     private Vector2 moveLimit;  //移动的时候限制左右
     private Vector2 oldPos;  //移动的时候限制左右
@@ -116,6 +124,7 @@ public class Symbol : LayoutGroup
         CalLine();
     }
 
+    float fenbianlv => 800f / Screen.width;
     //计算符尾长度
     public void CalLine()
     {
@@ -123,8 +132,33 @@ public class Symbol : LayoutGroup
         {
             return;
         }
-        float fenbianlv = 800f / Screen.width;
-        float lineH = rectTransform.rect.size.y - 7;
+
+        if (symbol_zu != null && symbol_zu.symbols[0] != this && symbol_zu.symbols[symbol_zu.symbols.Count - 1] != this)
+        {
+            Zuline();
+        }
+        else
+        {
+            float lineH = rectTransform.rect.size.y - 7;
+            Line(lineH);
+        }
+
+    }
+    //计算符尾长度 组模式
+    private void Zuline()
+    {
+        int i = tailDir == 0 ? 0 : rectChildren.Count - 1;
+        RectTransform rect = rectChildren[i].GetChild(1).GetComponent<RectTransform>();
+        Vector2 p = rect.position;
+        var y = (p.x - symbol_zu.FirstPos.x) / symbol_zu.LinDir + symbol_zu.FirstPos.y;
+        Debug.Log(symbol_zu.FirstPos + " " + symbol_zu.LinDir + " " + y);
+        zupos = new Vector2(p.x, y);
+        float lineH = (zupos - p).magnitude * fenbianlv;
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, lineH);
+    }
+    //计算符尾长度 非组或组员边界
+    private void Line(float lineH)
+    {
         if (rectChildren.Count < 2)
         {
             RectTransform rect = rectChildren[0].GetChild(1).GetComponent<RectTransform>();
@@ -147,7 +181,7 @@ public class Symbol : LayoutGroup
         }
     }
 
-    //计算时值
+    //更新时值 更新音符尾巴图
     private void SyT()
     {
         meterTime = 8;
@@ -163,7 +197,7 @@ public class Symbol : LayoutGroup
             for (int i = 0; i < SymbolHeads.Count; i++)
             {
                 SymbolHeads[i].nodehead.sprite = GameControl.Instance.nodeHeads[head];
-                if (wei < 0)
+                if (wei < 0 || symbol_zu != null)
                 {
                     SymbolHeads[i].fuwei.CrossFadeAlpha(0, 0, true);
                 }
@@ -176,6 +210,7 @@ public class Symbol : LayoutGroup
         }
     }
 
+    //对音符时  隐藏竖线
     private void ActiveLine(int tailDir)
     {
         Debug.Log("ActiveLine");
@@ -228,6 +263,7 @@ public class Symbol : LayoutGroup
 
     public bool MoveX(float value)
     {
+        OnMove?.Invoke();
         float x = oldPos.x + value;
         if (x > moveLimit.x && x < moveLimit.y)
         {

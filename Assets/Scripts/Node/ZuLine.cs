@@ -32,50 +32,41 @@ public class ZuLine : MaskableGraphic
         }
     }
 
+
     protected override void OnPopulateMesh(VertexHelper vh)
     {
         vh.Clear();
-
         int count = Zu.symbols.Count;
         if (count < 2)
         {
             Debug.Log("连接组数量必须 >=2");
             return;
         }
-        int linnum = CalLineNum(zu.symbols, ref count);
-    }
-
-    private int CalLineNum(List<Symbol> symbols, ref int count)
-    {
-        Symbol f = symbols[0];
-        Symbol e = symbols[count - 1];
-        if (f.meterTime != e.meterTime)
-        {
-            Debug.Log("连接组的首尾时值必须一致");
-            return 0;
-
-        }
-        foreach (var item in symbols)
+        Symbol f = Zu.symbols[0];
+        Symbol e = Zu.symbols[count - 1];
+        foreach (var item in Zu.symbols)
         {
             if ((int)item.symbolbaseTime < 3)
             {
                 Debug.Log("连接组的所有音符时值必须 < 4分音符");
-                return 0;
             }
         }
         int i = (int)f.symbolbaseTime - 2;
         var fpos = f.SymbolHeads[f.SymbolHeads.Count - 1].fuwei.rectTransform.position;
+        zu.FirstPos = fpos;
         var epos = e.SymbolHeads[e.SymbolHeads.Count - 1].fuwei.rectTransform.position;
-
         Vector2 _fpos, _epos;
-        _fpos = fpos- rectTransform.position ;
-        _epos = epos-rectTransform.position ;
-        //RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, fpos, Cam, out _fpos);
-        //RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, epos, Cam, out _epos);
-        Debug.Log("开始连接" + _fpos + " " + _epos);
-        //Debug.Log(a+" "+b);
-        GetQuad(_fpos, _epos);
-        return i;
+        _fpos = fpos - rectTransform.position;
+        float Fenbianlv = 800f / Screen.width;
+        _fpos *= Fenbianlv;
+        _epos = epos - rectTransform.position;
+        _epos *= Fenbianlv;
+        Vector2 dir = _epos - _fpos;
+        zu.LinDir = dir.x / dir.y; //将斜率赋值
+
+        var et = Zu.symbols[0];
+
+        vh.AddUIVertexQuad(GetQuad(_fpos, _epos));
     }
 
     private UIVertex[] GetQuad(Vector2 startPos, Vector2 endPos)
