@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Symbol_ZU : LayoutGroup
+public class Symbol_ZU : MonoBehaviour
 {
     public List<Symbol> symbols=new List<Symbol>();
     [Range(0, 1)]
     public int tailDir;
 
     private ZuLine zuline;
+    private RectTransform _rectTransform;
 
     public ZuLine Zuline
     {
@@ -17,27 +18,33 @@ public class Symbol_ZU : LayoutGroup
         {
             if (!zuline)
             {
-                if (rectChildren.Count>0)
+                if (RectTransform.childCount>0)
                 {
-                    zuline = rectChildren[0].GetComponent<ZuLine>();
+                    zuline = RectTransform.GetChild(0).GetComponent<ZuLine>();
                 }
             }
             return zuline;
         }
     }
 
+    public RectTransform RectTransform {
+        get {
+            if (!_rectTransform)
+            {
+                _rectTransform = GetComponent<RectTransform>();
+            }
+            return _rectTransform;
+        }
+    }
+
     public Vector2 FirstPos { get; set;  }
     public float LinDir { get; set; } = 1;
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         foreach (var item in symbols)
         {
             item.symbol_zu = this;
         }
-    }
-    public override void CalculateLayoutInputVertical()
-    {
         for (int i = 0; i < symbols.Count; i++)
         {
             var n = i;
@@ -45,14 +52,21 @@ public class Symbol_ZU : LayoutGroup
         }
     }
 
-    public override void SetLayoutHorizontal()
+    public void SetLayoutHorizontal()
     {
+
+        StartCoroutine(_SetDirty());
+    }
+
+    IEnumerator _SetDirty()
+    {
+        Zuline.CalDir();
+        foreach (var item in symbols)
+        {
+            item.CalLine();
+        }
+        yield return null;
         Zuline.SetAllDirty();
     }
-
-    public override void SetLayoutVertical()
-    {
-    }
-
 	
 }

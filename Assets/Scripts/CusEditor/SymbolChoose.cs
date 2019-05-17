@@ -55,18 +55,18 @@ public class SymbolChoose : MonoBehaviour
         var s = GameControl.Instance.prefabs["Symbol"];
         var sb = Instantiate(s, Input.mousePosition, Quaternion.identity, m.transform);
         var symbol = sb.GetComponent<Symbol>();
-        symbol.symbolbaseTime = nodeType;
+        symbol.SymbolbaseTime = nodeType;
         StartCoroutine(_SetGamutbyAnchoredpos(symbol));
-        m.AddMoveItem(symbol.rectTransform);
+        m.AddMoveItem(symbol.RectTransform);
     }
 
     IEnumerator _SetGamutbyAnchoredpos(Symbol symbol)
     {
         yield return null;
-        var p = symbol.rectTransform.anchoredPosition;
+        var p = symbol.RectTransform.anchoredPosition;
         float y = p.y;
         p.y = 0;
-        symbol.rectTransform.anchoredPosition = p;
+        symbol.RectTransform.anchoredPosition = p;
         symbol.SymbolHeads[0].SetGamutbyAnchoredpos(y);
     }
 

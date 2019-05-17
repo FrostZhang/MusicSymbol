@@ -58,14 +58,12 @@ public class SymbolHead : MonoBehaviour, IBeginDragHandler, IDragHandler
         if (index > 0)
         {
             mingamut = Symbol.SymbolHeads[index - 1].gamut + 1;
-            //mingamut = symbol.GetChild(index - 1).GetComponent<SymbolHead>().gamut + 1;
         }
         else
             mingamut = -9;
         if (index < Symbol.SymbolHeads.Count - 1)
         {
             maxgamut = Symbol.SymbolHeads[index + 1].gamut - 1;
-            //maxgamut = symbol.GetChild(index + 1).GetComponent<SymbolHead>().gamut - 1;
         }
         else
             maxgamut = 18;

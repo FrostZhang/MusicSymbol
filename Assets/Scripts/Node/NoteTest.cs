@@ -7,6 +7,21 @@ public class NoteTest : MaskableGraphic
 {
     int gamut;
     int tailDir;
+    Symbol symbol;
+    private float fenbianlv => 800f / Screen.width;
+
+    public Symbol Symbol
+    {
+        get
+        {
+            if (!symbol)
+            {
+                symbol = GetComponentInParent<Symbol>();
+            }
+            return symbol;
+        }
+    }
+
     public void ReBuild(int gamut, int tailDir)
     {
         this.gamut = gamut;
@@ -17,6 +32,12 @@ public class NoteTest : MaskableGraphic
     protected override void OnPopulateMesh(VertexHelper toFill)
     {
         toFill.Clear();
+        //UnderLine(toFill);
+        //Line(toFill);
+    }
+
+    private void UnderLine(VertexHelper toFill)
+    {
         if (gamut < 0)
         {
             int g = Mathf.Abs(gamut);
@@ -41,7 +62,7 @@ public class NoteTest : MaskableGraphic
                 }
             }
         }
-        if (gamut > 8)
+        else if (gamut > 8)
         {
             int g = gamut - 8;
             int count = g / 2;
@@ -66,6 +87,46 @@ public class NoteTest : MaskableGraphic
                 }
             }
         }
+    }
+
+    private void Line(VertexHelper toFill)
+    {
+        var size = GetPixelAdjustedRect().size;
+        if (tailDir == 0)
+        {
+            Vector2 st = new Vector2(size.x - 1, size.y - 2);
+            float dis = 0;
+            if (Symbol.RectChildren.Count > 0)
+            {
+                Vector2 upPos = Symbol.RectChildren[Symbol.RectChildren.Count - 1].position;
+                Vector2 downPos = Symbol.RectChildren[0].position;
+                dis = Vector2.Distance(upPos, downPos);
+            }
+            Vector2 et = new Vector2(st.x, st.y + dis + Symbol.RectTransform.rect.size.y);
+            Debug.Log(st + "  " + et);
+            toFill.AddUIVertexQuad(GetQuad(st, et));
+        }
+
+        //if (Symbol.RectChildren.Count < 2)
+        //{
+        //    RectTransform rect = Symbol.RectChildren[0].GetChild(1).GetComponent<RectTransform>();
+        //    rect.sizeDelta = new Vector2(rect.sizeDelta.x, lineH);
+        //    return;
+        //}
+        //if (tailDir == 0)
+        //{
+        //    Vector3 upPos = Symbol.RectChildren[Symbol.RectChildren.Count - 1].GetChild(1).position;
+        //    RectTransform rect = Symbol.RectChildren[0].GetChild(1).GetComponent<RectTransform>();
+        //    Vector3 downPos = rect.position;
+        //    rect.sizeDelta = new Vector2(rect.sizeDelta.x, Vector2.Distance(upPos, downPos) * fenbianlv + lineH);
+        //}
+        //else
+        //{
+        //    Vector3 upPos = Symbol.RectChildren[0].GetChild(1).position;
+        //    RectTransform rect = Symbol.RectChildren[Symbol.RectChildren.Count - 1].GetChild(1).GetComponent<RectTransform>();
+        //    Vector3 downPos = rect.position;
+        //    rect.sizeDelta = new Vector2(rect.sizeDelta.x, Vector2.Distance(upPos, downPos) * fenbianlv + lineH);
+        //}
     }
 
     private UIVertex[] GetQuad(Vector2 startPos, Vector2 endPos)
